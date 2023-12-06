@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDg8t_f5oq9D0ut0zyvvO67TjYbuwjvMZU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>586335188838</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flutterMiniChallenge3</string>
+	<key>PROJECT_ID</key>
+	<string>movieapplogin-93294</string>
+	<key>STORAGE_BUCKET</key>
+	<string>movieapplogin-93294.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:586335188838:ios:e92b6484b03c5480ccfaa7</string>
+</dict>
+</plist>

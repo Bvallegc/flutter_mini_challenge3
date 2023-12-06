@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "586335188838",
+    "project_id": "movieapplogin-93294",
+    "storage_bucket": "movieapplogin-93294.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586335188838:android:667ae8a82b30ed7cccfaa7",
+        "android_client_info": {
+          "package_name": "com.example.flutter_mini_challenge_3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASkCLRfS1Zx1-eNHVuKDnFmM-RTnO6fv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
