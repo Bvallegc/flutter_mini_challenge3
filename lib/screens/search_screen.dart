@@ -144,39 +144,46 @@ class _SearchScreenState extends State<SearchScreen> {
     },
   );
 }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Search')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              onChanged: performSearch,
-              decoration: InputDecoration(
-                labelText: 'Search Movies, TV Shows, Actors',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    performSearch('');
-                  },
-                ),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _searchController,
+            onChanged: performSearch,
+            decoration: InputDecoration(
+              labelText: 'Search Movies, TV Shows, Actors',
+              labelStyle: TextStyle(color: Colors.blueGrey),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(color: Colors.blueGrey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(color: Colors.blueGrey),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.clear, color: Colors.blueGrey),
+                onPressed: () {
+                  _searchController.clear();
+                  performSearch('');
+                },
               ),
             ),
-            Divider(color: Colors.grey[300]),
-            _buildSearchResults(context),
-            Divider(color: Colors.grey[300]),
-            const Text('Recent Searches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Expanded(
-              child: RecentSearchesWidget(recentSearches: recentSearches),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(height: 20.0),
+          _buildSearchResults(context),
+          SizedBox(height: 20.0),
+          Text('Recent Searches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+          Expanded(
+            child: RecentSearchesWidget(recentSearches: recentSearches),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

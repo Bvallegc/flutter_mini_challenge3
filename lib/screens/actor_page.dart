@@ -11,7 +11,7 @@ class ActorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: AppBar(
-      title: const Text('Movie Details'),
+      title: const Text('Actor Details'),
     ),
     body: FutureBuilder<dynamic>(
       future: MovieService.actorDetails(actorId),
@@ -32,23 +32,25 @@ class ActorPage extends StatelessWidget {
   }
 
   Widget _buildActorDetails(Actor actor) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${actor.profilePath}')),
-          const SizedBox(height: 16.0),
-          Text(actor.name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16.0),
-          Text(
-            actor.biography,
-            style: const TextStyle(fontSize: 16.0),
-            textAlign: TextAlign.center,
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${actor.profilePath}')),
+            const SizedBox(height: 16.0),
+            Text(actor.name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16.0),
+            Text(
+              actor.biography,
+              style: const TextStyle(fontSize: 16.0),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,68 +1,65 @@
 import 'package:flutter/material.dart'; 
-import 'package:cloud_firestore/cloud_firestore.dart'; 
-import '../models/models.dart';
-import '../service/movie_service.dart';
+import '../models/models.dart'; 
 
 class MovieSlider extends StatelessWidget {
-  final Stream<QuerySnapshot> stream;
+  final List<Movie> movies;
+  final String title;
 
-  MovieSlider({required this.stream});
+  MovieSlider({Key? key, required this.movies, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: stream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-
-        return Container(
-          height: 200,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(
+          height: 275,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data!.docs.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
-              Map<String, dynamic> data = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-              String? movieId = data['movieId'];
-              print('Data: $data');
-              print('movieId: $movieId');
-
-              if (movieId != null) {
-                return FutureBuilder<dynamic>(
-                  future: MovieService.movieDetails(int.parse(movieId)),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      Movie movie = snapshot.data!;
-                      return Container(
-                        width: 130,
-                        child: Column(
-                          children: [
-                            movie.posterPath != null 
-                              ? Image.network('https://image.tmdb.org/t/p/w500${movie.posterPath}')
-                              : Image.asset('assets/images/placeholder.png'), // Replace with your placeholder image
-                            Text(movie.title ?? ''),
-                          ],
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        'https://image.tmdb.org/t/p/w500${movies[index].posterPath}', 
+                        width: 160.0, 
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Container(
+                      width: 160.0,
+                      child: Text(
+                        movies[index].title,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
                         ),
-                      );
-                    }
-                  },
-                );
-              } else {
-                return SizedBox.shrink();
-              }
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

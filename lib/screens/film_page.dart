@@ -3,6 +3,9 @@ import '../service/movie_service.dart';
 import '../models/models.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/models.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class FilmPage extends StatefulWidget {
   final int filmId;
@@ -25,9 +28,9 @@ class _FilmPageState extends State<FilmPage> {
   }
 
   Future<void> loadPreferences() async {
-    // Get a DocumentReference
-    DocumentReference movie = FirebaseFirestore.instance.collection('movies').doc('${widget.filmId}');
+    String userId = FirebaseAuth.instance.currentUser!.uid;
 
+    DocumentReference movie = FirebaseFirestore.instance.collection('users').doc(userId).collection('movies').doc('${widget.filmId}');
     // Get the document
     DocumentSnapshot snapshot = await movie.get();
 
@@ -37,19 +40,24 @@ class _FilmPageState extends State<FilmPage> {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       isLiked.value = data['isLiked'] as bool;
       isRated = data['isRated'] as double;
+      
     }
   }
 
-  Future<void> savePreferences() async {
+  Future<void> savePreferences(Movie movie) async {
   // Get a CollectionReference
-  CollectionReference movies = FirebaseFirestore.instance.collection('movies');
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
+  // Get a CollectionReference
+  CollectionReference movies = FirebaseFirestore.instance.collection('users').doc(userId).collection('movies');
   // Set the document with a specific ID
   return movies
     .doc('${widget.filmId}')
     .set({
       'isLiked': isLiked.value,
       'isRated': isRated,
+      'title': movie.title, // store the movie title
+      'poster': movie.posterPath, // store the movie poster
     })
     .then((value) => print("Preferences Saved"))
     .catchError((error) => print("Failed to save preferences: $error"));
@@ -80,61 +88,63 @@ class _FilmPageState extends State<FilmPage> {
   }
 
   Widget _buildMovieDetails(Movie movie) {
-  return Container(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${movie.posterPath}')),
-        const SizedBox(height: 16.0),
-        Text(movie.title, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16.0),
-        Text(
-          movie.overview,
-          style: const TextStyle(fontSize: 16.0),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ValueListenableBuilder<bool>(
-                valueListenable: isLiked,
-                builder: (context, value, child) {
-                  return IconButton(
-                    icon: Icon(value ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
-                    onPressed: () {
-                      isLiked.value = !isLiked.value;
-                      // Handle the user liking the movie
-                    },
-                  );
-                },
-              ),
-              RatingBar.builder(
-                initialRating: isRated,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                  isRated = rating;
-                })
-            ],
+  return SingleChildScrollView(
+    child: Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${movie.posterPath}')),
+          const SizedBox(height: 16.0),
+          Text(movie.title, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16.0),
+          Text(
+            movie.overview,
+            style: const TextStyle(fontSize: 16.0),
+            textAlign: TextAlign.center,
           ),
-        const SizedBox(height: 16.0),
-        ElevatedButton(
-          child: Text('Save Changes'),
-          onPressed: savePreferences,
-        ),
-      ],
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ValueListenableBuilder<bool>(
+                  valueListenable: isLiked,
+                  builder: (context, value, child) {
+                    return IconButton(
+                      icon: Icon(value ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
+                      onPressed: () {
+                        isLiked.value = !isLiked.value;
+                        // Handle the user liking the movie
+                      },
+                    );
+                  },
+                ),
+                RatingBar.builder(
+                  initialRating: isRated,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                    isRated = rating;
+                  })
+              ],
+            ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            child: Text('Save Changes'),
+            onPressed: () => savePreferences(movie),
+          ),
+        ],
+      ),
     ),
   );
 }

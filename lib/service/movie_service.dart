@@ -11,10 +11,61 @@ class MovieService {
 
     return ExploreData(popMovies);
   }
-
+  
   static Future<List<Movie>> fetchMovies() async {
     final response = await http.get(Uri.parse(
       '${ApiConfig.baseUrl}/movie/popular?api_key=${ApiConfig.apiKey}',
+    ));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch movies');
+    }
+  }
+
+  static Future<List<Movie>> fetchPopMovies() async {
+    final response = await http.get(Uri.parse(
+      '${ApiConfig.baseUrl}/movie/popular?api_key=${ApiConfig.apiKey}',
+    ));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch movies');
+    }
+  }
+
+   static Future<List<Movie>> fetchTopMovies() async {
+    final response = await http.get(Uri.parse(
+      '${ApiConfig.baseUrl}/movie/top_rated?api_key=${ApiConfig.apiKey}',
+    ));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch movies');
+    }
+  }
+  static Future<List<Movie>> fetchNowPlayingMovies() async {
+    final response = await http.get(Uri.parse(
+      '${ApiConfig.baseUrl}/movie/now_playing?api_key=${ApiConfig.apiKey}',
+    ));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch movies');
+    }
+  }
+  
+  static Future<List<Movie>> fetchUpcomingMovies() async {
+    final response = await http.get(Uri.parse(
+      '${ApiConfig.baseUrl}/movie/upcoming?api_key=${ApiConfig.apiKey}',
     ));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
