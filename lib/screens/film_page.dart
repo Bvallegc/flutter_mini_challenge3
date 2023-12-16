@@ -88,61 +88,145 @@ class _FilmPageState extends State<FilmPage> {
 
   Widget _buildMovieDetails(Movie movie) {
   return SingleChildScrollView(
-    child: Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${movie.posterPath}')),
-          const SizedBox(height: 16.0),
-          Text(movie.title, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16.0),
-          Text(
-            movie.overview,
-            style: const TextStyle(fontSize: 16.0),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ValueListenableBuilder<bool>(
-                  valueListenable: isLiked,
-                  builder: (context, value, child) {
-                    return IconButton(
-                      icon: Icon(value ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
-                      onPressed: () {
-                        isLiked.value = !isLiked.value;
-                        // Handle the user liking the movie
-                      },
-                    );
-                  },
-                ),
-                RatingBar.builder(
-                  initialRating: isRated,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                    isRated = rating;
-                  })
-              ],
+    child: Padding(
+      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+            height: 275,
+              child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          'https://image.tmdb.org/t/p/w500${movie.posterPath}', 
+                          width: 200.0, 
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
             ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            child: Text('Save Changes'),
-            onPressed: () => savePreferences(movie),
-          ),
-        ],
+            const SizedBox(height: 20.0),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(fontSize: 24.0),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Title: ',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 26.0),
+                  ),
+                  TextSpan(
+                    text: '${movie.title}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(fontSize: 15.0),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Overview: ',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 17.0),
+                  ),
+                  TextSpan(
+                    text: '${movie.overview}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(fontSize: 15.0),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Release Date: ',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 17.0),
+                  ),
+                  TextSpan(
+                    text: '${movie.releaseDate}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(fontSize: 15.0),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Original Language: ',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 17.0),
+                  ),
+                  TextSpan(
+                    text: '${movie.originalLanguage}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(fontSize: 15.0),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Number of votes: ',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 17.0),
+                  ),
+                  TextSpan(
+                    text: '${movie.voteCount}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ValueListenableBuilder<bool>(
+                    valueListenable: isLiked,
+                    builder: (context, value, child) {
+                      return IconButton(
+                        icon: Icon(value ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
+                        onPressed: () {
+                          isLiked.value = !isLiked.value;
+                          // Handle the user liking the movie
+                        },
+                      );
+                    },
+                  ),
+                  RatingBar.builder(
+                    initialRating: isRated,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                      isRated = rating;
+                    })
+                ],
+              ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              child: Text('Save Changes'),
+              onPressed: () => savePreferences(movie),
+            ),
+          ],
+        ),
       ),
     ),
   );

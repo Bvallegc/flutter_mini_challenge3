@@ -145,6 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         voteAverage: data['isRated'] as double,
         title: data['title'] as String,
         posterPath: data['poster'] as String,
+        mediaType: data['mediaType'] as String? ?? "",
+        releaseDate: data['release_date'] as String? ?? "",
+        originalLanguage: data['original_language'] as String? ?? "",
+        voteCount: data['vote_count'] as int? ?? 0,
+        backdropPath: data['backdrop_path'] as String? ?? "",
       );
     }
   }).where((movie) => movie != null).toList().cast<Movie>();
@@ -184,6 +189,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         voteAverage: data['isRated'] as double,
         title: data['title'] as String,
         posterPath: data['poster'] as String,
+        mediaType: data['mediaType'] as String? ?? "",
+        releaseDate: data['release_date'] as String? ?? "",
+        originalLanguage: data['original_language'] as String? ?? "",
+        voteCount: data['vote_count'] as int? ?? 0,
+        backdropPath: data['backdrop_path'] as String? ?? "",
       );
     }
   }).where((movie) => movie != null).toList().cast<Movie>();

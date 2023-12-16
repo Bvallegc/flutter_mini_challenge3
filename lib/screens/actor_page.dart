@@ -38,9 +38,18 @@ class ActorPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage('https://image.tmdb.org/t/p/w500${actor.profilePath}')),
+            Container(
+          height: 275,
+            child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        'https://image.tmdb.org/t/p/w500${actor.profilePath}', 
+                        width: 200.0, 
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+          ),
             const SizedBox(height: 16.0),
             Text(actor.name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16.0),

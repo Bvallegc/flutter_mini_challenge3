@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart'; 
 import '../models/models.dart'; 
+import '../screens/export_screens.dart';
 
 class MovieSlider extends StatelessWidget {
   final List<Movie> movies;
   final String title;
+  
 
   MovieSlider({Key? key, required this.movies, required this.title}) : super(key: key);
 
@@ -28,7 +30,16 @@ class MovieSlider extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
             itemBuilder: (context, index) {
-              return Padding(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FilmPage(filmId: movies[index].id, mediaType: movies[index].mediaType),
+                    ),
+                  );
+                },
+               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: <Widget>[
@@ -55,6 +66,7 @@ class MovieSlider extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
               );
             },
           ),
