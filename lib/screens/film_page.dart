@@ -3,7 +3,6 @@ import '../service/movie_service.dart';
 import '../models/models.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 

@@ -20,9 +20,10 @@ dependencies:
   firebase_core: ^2.24.0
   cached_network_image: ^3.3.0
   firebase_storage: ^11.5.3
-  image_picker: ^1.0.4
+  image_picker: ^0.8.6
   flutter_rating_bar: ^4.0.0
   cloud_firestore: ^4.13.3
+  permission_handler: ^11.1.0
 
 
 dev_dependencies:

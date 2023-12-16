@@ -118,14 +118,14 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   });
-}
+  }
 
   Widget _errorMessage() {
   if (errorMessage != null && errorMessage != '') {
     _showError(errorMessage!);
   }
   return Container();
-}
+  }
 
   Widget _submitButton() {
     return ElevatedButton(
@@ -139,7 +139,6 @@ class _LoginPageState extends State<LoginPage> {
                 password: _passwordController.text,
               );
             } else {
-              // Attempt to create user
              createUserWithEmailAndPassword();
             }
             Provider.of<AppStateManager>(context, listen: false)
