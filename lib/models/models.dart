@@ -7,4 +7,6 @@ export 'recent_search.dart';
 export 'actor.dart';
 export 'user.dart';
 export 'movie_slider.dart';
+export 'series.dart';
+
 

@@ -122,4 +122,15 @@ class MovieService {
         print('Failed to search');
         }
     }
+
+    static Future<dynamic> tvShowDetails(int id) async {
+    var url = Uri.parse('https://api.themoviedb.org/3/tv/$id?api_key=${ApiConfig.apiKey}');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+        return json.decode(response.body);
+    } else {
+        print('Failed to search');
+        }
+    }
 }

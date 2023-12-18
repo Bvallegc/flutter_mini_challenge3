@@ -83,6 +83,8 @@ class _SearchScreenState extends State<SearchScreen> {
             String imageUrl = 'https://image.tmdb.org/t/p/w500';
             int id = result['id'];
             String mediaType = result['media_type'];
+            print('id , $id');
+            //print('Result: $result');
 
             if (mediaType == 'person') {
               imageUrl += result['profile_path'] ?? '';
@@ -95,6 +97,21 @@ class _SearchScreenState extends State<SearchScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ActorPage(actorId: id, mediaType: mediaType),
+                    ),
+                  );
+                },
+              );
+            } else if (mediaType == 'tv') {
+              imageUrl += result['poster_path'] ?? '';
+              return ListTile(
+                title: Text(title),
+                leading: _buildImage(imageUrl),
+                onTap: () {
+                  addToRecentSearches(title, imageUrl, id, mediaType);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeriesPage(seriesId: id, mediaType: mediaType), // Assuming you have a SeriesPage
                     ),
                   );
                 },

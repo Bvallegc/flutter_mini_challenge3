@@ -5,3 +5,5 @@ export 'search_screen.dart';
 export 'film_page.dart';
 export 'actor_page.dart';
 export 'user_profile.dart';
+export 'series_page.dart';
+
