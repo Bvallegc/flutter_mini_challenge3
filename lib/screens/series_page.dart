@@ -19,6 +19,7 @@ class SeriesPage extends StatefulWidget {
 class _SeriesPageState extends State<SeriesPage> {
   final ValueNotifier<bool> isLiked = ValueNotifier<bool>(false);
   double isRated = 0;
+  Series? series;
 
   @override
   void initState() {
@@ -72,12 +73,132 @@ class _SeriesPageState extends State<SeriesPage> {
     });
   }
 
+  Future<void> savePreferences2(Series series) async {
+  // Get a CollectionReference
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference seriesRef = FirebaseFirestore.instance.collection('users').doc(userId).collection('seriesList');
+
+  // Show a dialog with two options.
+  String action = await showDialog(
+    context: context,
+    builder: (dialogContext) => Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: const Text('Save to existing list'),
+            onTap: () => Navigator.pop(dialogContext, 'existing'),
+          ),
+          ListTile(
+            title: const Text('Add to new list'),
+            onTap: () => Navigator.pop(dialogContext, 'new'),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  if (action == 'existing') {
+    // Handle saving to existing list.
+    _handleSaveToExistingList(series, seriesRef, context);
+  } else if (action == 'new') {
+    // Handle adding to new list.
+   String newListName = await showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('New list name'),
+        content: TextField(
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: 'List name',
+          ),
+          onSubmitted: (value) => Navigator.pop(dialogContext, value),
+        ),
+      ),
+    );
+
+    // Handle adding to new list.
+    _handleAddToNewList(series, seriesRef, newListName);
+  }
+}
+
+  void _handleSaveToExistingList(Series series, CollectionReference seriesRef, BuildContext context) async {
+  // Fetch all the documents from the seriesRef collection.
+  QuerySnapshot querySnapshot = await seriesRef.get();
+  List<QueryDocumentSnapshot> docs = querySnapshot.docs;
+
+  // Extract the list names from the documents.
+  List<String> listNames = docs.map((doc) => doc.id).toList();
+
+  // Display the list names in a dialog.
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select a list'),
+        content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            itemCount: listNames.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(listNames[index]),
+                onTap: () {
+                  // Add the series to the selected list and close the dialog.
+                  _addSeriesToList(series, seriesRef, docs[index].id);
+                  Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _addSeriesToList(Series series, CollectionReference seriesRef, String listId) async {
+    // Add the series to an existing list in your database.
+    await seriesRef.doc(listId).update({
+      'series': FieldValue.arrayUnion([{
+        'id': series.id, // store the series id
+        'isLiked': isLiked.value,
+        'isRated': isRated,
+        'title': series.name, // store the series title
+        'posterPath': series.posterPath, // store the series poster
+      }]),
+    });
+  }
+
+  void _handleAddToNewList(Series series, CollectionReference seriesRef, String newListName) async {
+  // Add the series to a new list in your database.
+  await seriesRef.doc(newListName).set({
+    'series': FieldValue.arrayUnion([{
+      'id': series.id,
+      'title': series.name,
+      'isRated': isRated,
+      'isLiked': isLiked.value,
+      'posterPath': series.posterPath,
+      }]),
+    }, SetOptions(merge: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(
-      title: const Text('Series Details'),
-    ),
+      appBar: AppBar(
+        title: const Text('Series Details'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              if (series != null) {
+                savePreferences2(series!);
+              }
+            },
+          ),
+        ],
+      ),
     body: FutureBuilder<dynamic>(
       future: MovieService.tvShowDetails(widget.seriesId),
       builder: (context, snapshot) {
@@ -86,8 +207,8 @@ class _SeriesPageState extends State<SeriesPage> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error.toString()}'));
         } else if (snapshot.hasData) {
-          Series series = Series.fromJson(snapshot.data!);
-          return _buildSeriesDetails(series);
+          series = Series.fromJson(snapshot.data!);
+          return _buildSeriesDetails(series!);
         } else {
           return const Center(child: Text('No data available'));
         }
